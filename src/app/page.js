@@ -1,66 +1,56 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+      <header className={styles.header}>
+        <div className={`${styles.container} ${styles.headerInner}`}>
+          <div className={styles.logo}>
             <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/logo.svg"
+              alt="NHC Innovation logo"
+              width={36}
+              height={36}
+              className={styles.logoImage}
             />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <nav className={styles.nav}>
+            <Link href="/" aria-current="page">
+              Products
+            </Link>
+            <Link href="/about">About</Link>
+          </nav>
         </div>
+      </header>
+
+      <main className={styles.main}>
+        <div className={styles.container}></div>
       </main>
+
+      <footer className={styles.footer}>
+        <div className={`${styles.container} ${styles.footerInner}`}>
+          <div className={styles.footerLogos}>
+            <Image
+              src="/logo-white.svg"
+              alt="NHC Innovation logo"
+              width={42}
+              height={42}
+            />
+            <Image
+              src="/vision2030.png"
+              alt="Vision 2030 logo"
+              width={90}
+              height={42}
+            />
+          </div>
+          <span>
+            All rights reserved © 2022 - Developed and operated by National
+            Housing
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
