@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: 700px;
+  width: min(700px, 90vw);
 }
 
 .searchTitle {
@@ -36,6 +36,10 @@
   font-family: inherit;
   color: var(--text-primary);
   background: transparent;
+}
+
+.searchInput input::placeholder {
+  font-size: 12px;
 }
 
 .searchIcon {

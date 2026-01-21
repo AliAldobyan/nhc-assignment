@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import { Search } from "lucide-react";
 import styles from "./ProductsPage.module.css";
@@ -9,6 +12,33 @@ const inter = Inter({
 });
 
 export default function ProductsPage() {
+  const [query, setQuery] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      return;
+    }
+    const timeoutId = setTimeout(() => {
+      fetch(
+        `https://dummyjson.com/products/search?q=${encodeURIComponent(
+          trimmedQuery,
+        )}`,
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setProducts(data.products ?? []);
+          console.log("Search results:", data.products ?? []);
+        })
+        .catch((error) => {
+          console.error("Search error:", error);
+        });
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
+
   return (
     <div className={`${styles.searchSection} ${inter.className}`}>
       <div className={styles.searchBlock}>
@@ -18,7 +48,11 @@ export default function ProductsPage() {
             type="search"
             placeholder="Search keyword"
             aria-label="Search keyword"
-            className="h-auto border-0 bg-transparent px-0 py-0 text-[13px] font-normal shadow-none placeholder:text-[#7f7f7f] focus-visible:ring-0"
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              if (!event.target.value.trim()) setProducts([]);
+            }}
           />
           <span className={styles.searchIcon} aria-hidden="true">
             <Search size={16} />
