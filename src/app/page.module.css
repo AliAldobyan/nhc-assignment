@@ -18,7 +18,7 @@
 .headerInner {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 60px;
 }
 
 .logo {

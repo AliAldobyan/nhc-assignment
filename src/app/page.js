@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ProductsPage from "@/components/ProductsPage/ProductsPage";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -26,7 +27,9 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <div className={styles.container}></div>
+        <div className={styles.container}>
+          <ProductsPage />
+        </div>
       </main>
 
       <footer className={styles.footer}>
