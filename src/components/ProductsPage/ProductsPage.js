@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
+import Image from "next/image";
 import { Search } from "lucide-react";
 import styles from "./ProductsPage.module.css";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,8 @@ const inter = Inter({
 export default function ProductsPage() {
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     const trimmedQuery = query.trim();
@@ -28,8 +31,11 @@ export default function ProductsPage() {
       )
         .then((res) => res.json())
         .then((data) => {
-          setProducts(data.products ?? []);
-          console.log("Search results:", data.products ?? []);
+          const nextProducts = data.products ?? [];
+          setProducts(nextProducts);
+          setTotalCount(data.total ?? nextProducts.length);
+          setHasSearched(true);
+          console.log("Search results:", nextProducts);
         })
         .catch((error) => {
           console.error("Search error:", error);
@@ -50,15 +56,37 @@ export default function ProductsPage() {
             aria-label="Search keyword"
             value={query}
             onChange={(event) => {
-              setQuery(event.target.value);
-              if (!event.target.value.trim()) setProducts([]);
+              const nextValue = event.target.value;
+              setQuery(nextValue);
+              if (!nextValue.trim()) {
+                setProducts([]);
+                setTotalCount(0);
+                setHasSearched(false);
+              }
             }}
           />
           <span className={styles.searchIcon} aria-hidden="true">
             <Search size={16} />
           </span>
         </div>
+        {hasSearched && (
+          <p className={styles.resultsCount}>
+            Total results count: <span>{totalCount}</span>
+          </p>
+        )}
       </div>
+      {hasSearched && products.length === 0 && (
+        <div className={styles.emptyState}>
+          <Image
+            src="/emptyResult2.png"
+            alt="No results"
+            width={150}
+            height={150}
+          />
+          <p>No results for your search!</p>
+          <span>Try another keyword</span>
+        </div>
+      )}
     </div>
   );
 }
