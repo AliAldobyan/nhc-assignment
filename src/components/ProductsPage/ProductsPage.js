@@ -32,9 +32,7 @@ export default function ProductsPage() {
     const timeoutId = setTimeout(() => {
       setIsLoading(true);
       fetch(
-        `https://dummyjson.com/products/search?q=${encodeURIComponent(
-          trimmedQuery,
-        )}`,
+        `/api/products?q=${encodeURIComponent(trimmedQuery)}`,
       )
         .then((res) => res.json())
         .then((data) => {

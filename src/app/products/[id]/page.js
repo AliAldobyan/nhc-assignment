@@ -43,7 +43,7 @@ export default async function ProductDetailsPage({ params }) {
         </h1>
 
         {product?.thumbnail && (
-          <div className="w-full max-w-[520px] overflow-hidden rounded-lg  shadow-[0_6px_18px_rgba(0,0,0,0.1)]">
+          <div className="w-full max-w-[520px] overflow-hidden rounded-lg shadow-[0_6px_18px_rgba(0,0,0,0.1)]">
             <div className="relative h-[260px] w-full">
               <Image
                 src={product?.thumbnail}
