@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import styles from "./ProductCard.module.css";
+import Link from "next/link";
 
 export default function ProductCard({ product }) {
   const imageUrl = product?.thumbnail || product?.images?.[0];
@@ -26,9 +27,9 @@ export default function ProductCard({ product }) {
             <span className={styles.priceLabel}>Price :</span>{" "}
             <span className={styles.priceValue}>{product?.price}$</span>
           </span>
-          <button type="button" className={styles.more}>
-            More
-          </button>
+            <Link href={`/products/${product?.id}`} className={styles.more}>
+              More
+            </Link>
         </div>
       </CardContent>
     </Card>

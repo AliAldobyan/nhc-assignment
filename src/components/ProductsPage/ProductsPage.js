@@ -13,7 +13,10 @@ const inter = Inter({
 });
 
 export default function ProductsPage() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => {
+    if (typeof window === "undefined") return "";
+    return new URLSearchParams(window.location.search).get("q") || "";
+  });
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
@@ -61,9 +64,7 @@ export default function ProductsPage() {
     <div
       className={`flex w-full flex-col items-center justify-start gap-6 transition-[padding-top,min-height] duration-300 ease-out ${
         inter.className
-      } ${
-        shouldCenterSearch ? "min-h-[600px] pt-56" : "min-h-0 pt-0"
-      }`}
+      } ${shouldCenterSearch ? "min-h-[600px] pt-56" : "min-h-0 pt-0"}`}
     >
       <SearchBar
         query={query}
@@ -74,8 +75,18 @@ export default function ProductsPage() {
             setTotalCount(0);
             setHasSearched(false);
             setIsLoading(false);
+            if (typeof window !== "undefined") {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("q");
+              window.history.replaceState(null, "", url);
+            }
           } else {
             setIsLoading(true);
+            if (typeof window !== "undefined") {
+              const url = new URL(window.location.href);
+              url.searchParams.set("q", nextValue);
+              window.history.replaceState(null, "", url);
+            }
           }
         }}
         hasSearched={hasSearched}
