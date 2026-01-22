@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Search } from "lucide-react";
 import styles from "./ProductsPage.module.css";
 import { Input } from "@/components/ui/input";
+import ProductsGrid from "./ProductsGrid";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +32,15 @@ export default function ProductsPage() {
       )
         .then((res) => res.json())
         .then((data) => {
-          const nextProducts = data.products ?? [];
+          const nextProducts = Array.isArray(data)
+            ? data
+            : (data.products ?? []);
           setProducts(nextProducts);
-          setTotalCount(data.total ?? nextProducts.length);
+          setTotalCount(
+            Array.isArray(data)
+              ? nextProducts.length
+              : (data.total ?? nextProducts.length),
+          );
           setHasSearched(true);
           console.log("Search results:", nextProducts);
         })
@@ -75,16 +82,22 @@ export default function ProductsPage() {
           </p>
         )}
       </div>
-      {hasSearched && products.length === 0 && (
-        <div className={styles.emptyState}>
-          <Image
-            src="/emptyResult2.png"
-            alt="No results"
-            width={150}
-            height={150}
-          />
-          <p>No results for your search!</p>
-          <span>Try another keyword</span>
+      {hasSearched && (
+        <div className={styles.resultsSection}>
+          {products.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Image
+                src="/emptyResult2.png"
+                alt="No results"
+                width={150}
+                height={150}
+              />
+              <p>No results for your search!</p>
+              <span>Try another keyword</span>
+            </div>
+          ) : (
+            <ProductsGrid products={products} />
+          )}
         </div>
       )}
     </div>

@@ -12,7 +12,9 @@
   --brand-dark: #0b4332;
   --brand-soft: #e4f1ea;
   --border: #e6ece8;
-  --shadow: 0 12px 28px rgba(9, 29, 22, 0.08);
+  --surface: #ffffff;
+  --text-on-brand: #ffffff;
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
 html,
