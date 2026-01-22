@@ -14,7 +14,6 @@ export default function ProductCard({ product }) {
             alt={product.title}
             width={320}
             height={240}
-            sizes="(max-width: 768px) 100vw, 260px"
             className={styles.image}
           />
         </div>

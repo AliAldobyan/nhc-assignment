@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
-import Image from "next/image";
-import { Search } from "lucide-react";
 import styles from "./ProductsPage.module.css";
-import { Input } from "@/components/ui/input";
-import ProductsGrid from "./ProductsGrid";
+import ProductsGrid from "./components/ProductsGrid/ProductsGrid";
+import SearchBar from "./components/SearchBar/SearchBar";
+import EmptyState from "./components/EmptyState/EmptyState";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -54,47 +53,23 @@ export default function ProductsPage() {
 
   return (
     <div className={`${styles.searchSection} ${inter.className}`}>
-      <div className={styles.searchBlock}>
-        <p className={styles.searchTitle}>Search products by keyword</p>
-        <div className={styles.searchInput}>
-          <Input
-            type="search"
-            placeholder="Search keyword"
-            aria-label="Search keyword"
-            value={query}
-            onChange={(event) => {
-              const nextValue = event.target.value;
-              setQuery(nextValue);
-              if (!nextValue.trim()) {
-                setProducts([]);
-                setTotalCount(0);
-                setHasSearched(false);
-              }
-            }}
-          />
-          <span className={styles.searchIcon} aria-hidden="true">
-            <Search size={16} />
-          </span>
-        </div>
-        {hasSearched && (
-          <p className={styles.resultsCount}>
-            Total results count: <span>{totalCount}</span>
-          </p>
-        )}
-      </div>
+      <SearchBar
+        query={query}
+        onQueryChange={(nextValue) => {
+          setQuery(nextValue);
+          if (!nextValue.trim()) {
+            setProducts([]);
+            setTotalCount(0);
+            setHasSearched(false);
+          }
+        }}
+        hasSearched={hasSearched}
+        totalCount={totalCount}
+      />
       {hasSearched && (
         <div className={styles.resultsSection}>
           {products.length === 0 ? (
-            <div className={styles.emptyState}>
-              <Image
-                src="/emptyResult2.png"
-                alt="No results"
-                width={150}
-                height={150}
-              />
-              <p>No results for your search!</p>
-              <span>Try another keyword</span>
-            </div>
+            <EmptyState />
           ) : (
             <ProductsGrid products={products} />
           )}
