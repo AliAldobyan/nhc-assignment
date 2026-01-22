@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
-import styles from "./ProductsPage.module.css";
 import ProductsGrid from "./components/ProductsGrid/ProductsGrid";
+import ProductsGridSkeleton from "./components/ProductsGrid/ProductsGridSkeleton";
 import SearchBar from "./components/SearchBar/SearchBar";
 import EmptyState from "./components/EmptyState/EmptyState";
 
@@ -17,6 +17,9 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const hasQuery = query.trim().length > 0;
+  const shouldCenterSearch = !hasSearched && !hasQuery;
 
   useEffect(() => {
     const trimmedQuery = query.trim();
@@ -24,6 +27,7 @@ export default function ProductsPage() {
       return;
     }
     const timeoutId = setTimeout(() => {
+      setIsLoading(true);
       fetch(
         `https://dummyjson.com/products/search?q=${encodeURIComponent(
           trimmedQuery,
@@ -41,9 +45,11 @@ export default function ProductsPage() {
               : (data.total ?? nextProducts.length),
           );
           setHasSearched(true);
+          setIsLoading(false);
           console.log("Search results:", nextProducts);
         })
         .catch((error) => {
+          setIsLoading(false);
           console.error("Search error:", error);
         });
     }, 300);
@@ -52,7 +58,13 @@ export default function ProductsPage() {
   }, [query]);
 
   return (
-    <div className={`${styles.searchSection} ${inter.className}`}>
+    <div
+      className={`flex w-full flex-col items-center justify-start gap-6 transition-[padding-top,min-height] duration-300 ease-out ${
+        inter.className
+      } ${
+        shouldCenterSearch ? "min-h-[600px] pt-56" : "min-h-0 pt-0"
+      }`}
+    >
       <SearchBar
         query={query}
         onQueryChange={(nextValue) => {
@@ -61,18 +73,23 @@ export default function ProductsPage() {
             setProducts([]);
             setTotalCount(0);
             setHasSearched(false);
+            setIsLoading(false);
+          } else {
+            setIsLoading(true);
           }
         }}
         hasSearched={hasSearched}
         totalCount={totalCount}
       />
-      {hasSearched && (
-        <div className={styles.resultsSection}>
-          {products.length === 0 ? (
-            <EmptyState />
-          ) : (
+      {(hasQuery || hasSearched || isLoading) && (
+        <div className="flex w-full max-w-[900px] flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-500">
+          {isLoading ? (
+            <ProductsGridSkeleton />
+          ) : products.length > 0 ? (
             <ProductsGrid products={products} />
-          )}
+          ) : hasSearched ? (
+            <EmptyState />
+          ) : null}
         </div>
       )}
     </div>
